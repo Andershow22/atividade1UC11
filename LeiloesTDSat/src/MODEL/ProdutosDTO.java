@@ -1,3 +1,5 @@
+package MODEL;
+
 
 public class ProdutosDTO {
     private Integer id;
