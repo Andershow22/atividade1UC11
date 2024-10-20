@@ -17,9 +17,7 @@ public class conectaDAO {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(url,user, senha);
-            JOptionPane.showMessageDialog(null, "Conexao com BD bem certinha");
             return con;
-            
         } catch (ClassNotFoundException |SQLException erro){
             JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
             return null;
