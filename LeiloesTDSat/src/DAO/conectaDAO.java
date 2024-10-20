@@ -7,18 +7,37 @@ import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class conectaDAO {
+    private String url = "jdbc:mysql://localhost:3306/atv2uc11";
+    private String user = "root";
+    private String senha = "urso9090";
+    private Connection con;
     
     public Connection connectDB(){
-        Connection conn = null;
-        
+
         try {
-        
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url,user, senha);
+            JOptionPane.showMessageDialog(null, "Conexao com BD bem certinha");
+            return con;
             
-        } catch (SQLException erro){
+        } catch (ClassNotFoundException |SQLException erro){
             JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
+            return null;
         }
-        return conn;
+    }
+    public Connection getConexao(){
+        if(con == null){
+            con = connectDB();
+            return con;
+        }
+        return con;
+    }
+    public void desconectar() throws SQLException{
+        if(con != null && !con.isClosed()){
+            con.close();
+        }else{
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao desconectar");
+        }
     }
     
 }
