@@ -1,7 +1,5 @@
 package DAO;
 
-
-
 import MODEL.ProdutosDTO;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
@@ -12,15 +10,14 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class ProdutosDAO {
-    
+
     Connection conn;
     PreparedStatement ps;
     ResultSet rs;
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
-    
-    public void cadastrarProduto (ProdutosDTO p){
+
+    public void cadastrarProduto(ProdutosDTO p) {
         try {
             conectaDAO c = new conectaDAO();
             String sql = "INSERT INTO `produtos`(`nome`, `valor`, `status`) VALUES (?,?,?)";
@@ -34,17 +31,16 @@ public class ProdutosDAO {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar produto " + ex.getMessage());
         }
-        
-        
+
     }
-    
-    public ArrayList<ProdutosDTO> listarProdutos(){
-        try{
+
+    public ArrayList<ProdutosDTO> listarProdutos() {
+        try {
             conectaDAO c = new conectaDAO();
             String sql = "SELECT * FROM `produtos`";
             ps = c.getConexao().prepareStatement(sql);
             rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 ProdutosDTO p = new ProdutosDTO();
                 p.setId(rs.getInt("id"));
                 p.setNome(rs.getString("nome"));
@@ -53,11 +49,44 @@ public class ProdutosDAO {
                 listagem.add(p);
             }
             ps.close();
-        }catch(SQLException e){
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao Listar dados" + e.getMessage());
         }
         return listagem;
     }
-        
-}
+    
+    public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+        try {
+            conectaDAO c = new conectaDAO();
+            String sql = "SELECT * FROM `produtos` AS p WHERE p.status = 'vendido'";
+            ps = c.getConexao().prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                ProdutosDTO p = new ProdutosDTO();
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                p.setValor(rs.getInt("valor"));
+                p.setStatus(rs.getString("status"));
+                listagem.add(p);
+            }
+            ps.close();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao Listar dados" + e.getMessage());
+        }
+        return listagem;
+    }
 
+    public void venderProduto(int id) {
+        try {
+            conectaDAO c = new conectaDAO();
+            String sql = "UPDATE `produtos` AS p SET p.status = 'vendido' WHERE p.id = " + id;
+            ps = c.getConexao().prepareStatement(sql);
+            ps.executeUpdate();
+            ps.close();
+        } catch (SQLException e) {
+           JOptionPane.showMessageDialog(null, "Erro ao vender produto " + e.getMessage());
+        }
+
+    }
+
+}
